@@ -1,0 +1,146 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --foreground-rgb: 0, 0, 0;
+  --background-start-rgb: 249, 250, 251;
+  --background-end-rgb: 255, 255, 255;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --foreground-rgb: 255, 255, 255;
+    --background-start-rgb: 15, 23, 42;
+    --background-end-rgb: 30, 41, 59;
+  }
+}
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 210 40% 2%;
+    --card: 0 0% 100%;
+    --card-foreground: 210 40% 2%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 210 40% 2%;
+    --primary: 210 100% 40%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 210 40% 96%;
+    --secondary-foreground: 210 40% 10%;
+    --muted: 210 40% 96%;
+    --muted-foreground: 210 40% 45%;
+    --accent: 210 40% 96%;
+    --accent-foreground: 210 40% 10%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 210 40% 89%;
+    --input: 210 40% 89%;
+    --ring: 210 100% 40%;
+    --success: 142 76% 36%;
+    --success-foreground: 0 0% 98%;
+    --warning: 38 92% 50%;
+    --warning-foreground: 0 0% 98%;
+    --chart-1: 210 100% 40%;
+    --chart-2: 142 76% 36%;
+    --chart-3: 38 92% 50%;
+    --chart-4: 280 100% 70%;
+    --chart-5: 345 82% 47%;
+    --radius: 0.75rem;
+  }
+
+  .dark {
+    --background: 210 40% 2%;
+    --foreground: 0 0% 98%;
+    --card: 210 40% 4%;
+    --card-foreground: 0 0% 98%;
+    --popover: 210 40% 4%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 210 100% 50%;
+    --primary-foreground: 210 40% 2%;
+    --secondary: 210 40% 10%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 210 40% 10%;
+    --muted-foreground: 210 40% 60%;
+    --accent: 210 40% 10%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 62% 30%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 210 40% 18%;
+    --input: 210 40% 18%;
+    --ring: 210 100% 50%;
+    --success: 142 76% 36%;
+    --success-foreground: 0 0% 98%;
+    --warning: 38 92% 50%;
+    --warning-foreground: 0 0% 98%;
+    --chart-1: 210 100% 50%;
+    --chart-2: 142 76% 36%;
+    --chart-3: 38 92% 50%;
+    --chart-4: 280 100% 70%;
+    --chart-5: 345 82% 47%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-gradient-to-br from-slate-50 to-blue-50 dark:from-slate-900 dark:to-slate-800 text-foreground font-sans;
+    min-height: 100vh;
+  }
+}
+
+@layer components {
+  .health-gradient {
+    @apply bg-gradient-to-r from-blue-600 via-blue-700 to-indigo-800;
+  }
+  
+  .success-gradient {
+    @apply bg-gradient-to-r from-emerald-500 to-green-600;
+  }
+  
+  .warning-gradient {
+    @apply bg-gradient-to-r from-amber-500 to-orange-600;
+  }
+  
+  .glass-effect {
+    @apply backdrop-blur-lg bg-white/30 dark:bg-slate-800/30 border border-white/20 dark:border-slate-700/30;
+  }
+  
+  .scan-pulse {
+    animation: scan-pulse 2s ease-in-out infinite;
+  }
+  
+  @keyframes scan-pulse {
+    0%, 100% { transform: scale(1); opacity: 0.8; }
+    50% { transform: scale(1.05); opacity: 1; }
+  }
+  
+  .health-card-hover {
+    @apply transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-blue-500/20;
+  }
+  
+  .vitals-animation {
+    animation: vitals-beat 1.5s ease-in-out infinite;
+  }
+  
+  @keyframes vitals-beat {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.02); }
+  }
+}
+
+.camera-overlay {
+  background: linear-gradient(45deg, transparent 40%, rgba(59, 130, 246, 0.1) 50%, transparent 60%);
+  animation: camera-scan 3s linear infinite;
+}
+
+@keyframes camera-scan {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+.medical-border {
+  border-image: linear-gradient(45deg, #3b82f6, #10b981, #3b82f6) 1;
+}
