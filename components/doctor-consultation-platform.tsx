@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -19,42 +19,37 @@ import {
   Calendar as CalendarIcon,
   Clock,
   Star,
-  MapPin,
-  Award,
   Shield,
   Heart,
   Brain,
   Eye,
-  Pill,
   Activity,
   AlertTriangle,
-  CheckCircle,
   Search,
-  Filter,
-  DollarSign,
   Languages,
-  GraduationCap,
-  Hospital,
-  Users,
-  TrendingUp,
   FileText,
   Camera,
   Mic,
-  MicOff,
-  VideoOff,
   PhoneOff
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { DoctorConsultationService, Doctor, ConsultationSession } from '@/lib/backend/doctor-consultation';
+
+type SearchFilters = {
+  specialty?: string;
+  availability?: "week" | "now" | "today";
+  rating?: number;
+  consultationType?: "audio" | "video" | "chat" | "";
+};
 
 export function DoctorConsultationPlatform() {
   const [doctors, setDoctors] = useState<Doctor[]>([]);
   const [selectedDoctor, setSelectedDoctor] = useState<Doctor | null>(null);
   const [consultations, setConsultations] = useState<ConsultationSession[]>([]);
   const [activeConsultation, setActiveConsultation] = useState<ConsultationSession | null>(null);
-  const [searchFilters, setSearchFilters] = useState({
+  const [searchFilters, setSearchFilters] = useState<SearchFilters>({
     specialty: '',
-    availability: '',
+    availability: undefined,
     rating: 0,
     consultationType: ''
   });
@@ -69,29 +64,34 @@ export function DoctorConsultationPlatform() {
     medicalHistory: ''
   });
 
-  useEffect(() => {
-    loadDoctors();
-    loadConsultations();
-    DoctorConsultationService.initializeSampleDoctors();
-  }, []);
-
-  const loadDoctors = async () => {
+  const loadDoctors = useCallback(async () => {
     try {
-      const doctorsList = await DoctorConsultationService.getAllDoctors(searchFilters);
+      // Convert empty string to undefined before making the API call
+      const filters = {
+        ...searchFilters,
+        consultationType: searchFilters.consultationType === "" ? undefined : searchFilters.consultationType
+      };
+      const doctorsList = await DoctorConsultationService.getAllDoctors(filters);
       setDoctors(doctorsList);
     } catch (error) {
       toast.error('Failed to load doctors');
     }
-  };
+  }, [searchFilters]);
 
-  const loadConsultations = async () => {
+  const loadConsultations = useCallback(async () => {
     try {
       const consultationsList = await DoctorConsultationService.getPatientConsultations('current-patient');
       setConsultations(consultationsList);
     } catch (error) {
       toast.error('Failed to load consultations');
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    loadDoctors();
+    loadConsultations();
+    DoctorConsultationService.initializeSampleDoctors();
+  }, [loadDoctors, loadConsultations]);
 
   const handleSearch = async () => {
     await loadDoctors();
@@ -238,7 +238,7 @@ export function DoctorConsultationPlatform() {
                   <strong>Dr. Johnson:</strong> Hello! How are you feeling today?
                 </div>
                 <div className="bg-blue-600 text-white p-2 rounded-lg text-sm ml-8">
-                  I've been experiencing some chest discomfort.
+                  I&apos;ve been experiencing some chest discomfort.
                 </div>
               </div>
             </div>
@@ -327,7 +327,10 @@ export function DoctorConsultationPlatform() {
               </SelectContent>
             </Select>
 
-            <Select value={searchFilters.availability} onValueChange={(value) => setSearchFilters(prev => ({ ...prev, availability: value }))}>
+            <Select 
+              value={searchFilters.availability} 
+              onValueChange={(value: "week" | "now" | "today") => setSearchFilters(prev => ({ ...prev, availability: value }))}
+            >
               <SelectTrigger>
                 <SelectValue placeholder="Availability" />
               </SelectTrigger>
@@ -339,7 +342,12 @@ export function DoctorConsultationPlatform() {
               </SelectContent>
             </Select>
 
-            <Select value={searchFilters.consultationType} onValueChange={(value) => setSearchFilters(prev => ({ ...prev, consultationType: value }))}>
+            <Select 
+              value={searchFilters.consultationType} 
+              onValueChange={(value: "audio" | "video" | "chat" | "") => 
+                setSearchFilters(prev => ({ ...prev, consultationType: value }))
+              }
+            >
               <SelectTrigger>
                 <SelectValue placeholder="Consultation Type" />
               </SelectTrigger>

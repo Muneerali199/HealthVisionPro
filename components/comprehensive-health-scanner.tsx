@@ -631,7 +631,7 @@ export function ComprehensiveHealthScanner() {
           <div className="flex items-center justify-center space-x-4 mt-6">
             <Button
               onClick={performAdvancedScan}
-              disabled={!selectedMode || (scanSession && scanSession.status !== 'completed' && scanSession.status !== 'failed')}
+              disabled={!selectedMode || ((scanSession && scanSession.status !== 'completed' && scanSession.status !== 'failed') ?? false)}
               className="health-gradient px-8 py-3 text-lg"
             >
               {scanSession && scanSession.status !== 'completed' && scanSession.status !== 'failed' ? (

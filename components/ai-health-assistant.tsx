@@ -78,6 +78,13 @@ interface AICapability {
   usage: number;
 }
 
+interface PossibleDiagnosis {
+  disease: {
+    name: string;
+  };
+  probability: number;
+}
+
 export function AIHealthAssistant() {
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
@@ -217,12 +224,12 @@ export function AIHealthAssistant() {
         response = `I've analyzed your symptoms and identified several possible conditions. Based on the symptoms you've described (${symptoms.join(', ')}), here are my findings:
 
 **Most Likely Conditions:**
-${symptomAnalysis.data.possibleDiagnoses.slice(0, 3).map((d, i) => 
+${symptomAnalysis.data.possibleDiagnoses.slice(0, 3).map((d: PossibleDiagnosis, i: number) => 
   `${i + 1}. ${d.disease.name} (${Math.round(d.probability)}% match)`
 ).join('\n')}
 
 **Immediate Recommendations:**
-${symptomAnalysis.data.recommendations.slice(0, 3).map(r => `• ${r}`).join('\n')}
+${symptomAnalysis.data.recommendations.slice(0, 3).map((r: string) => `• ${r}`).join('\n')}
 
 ${symptomAnalysis.data.redFlags.length > 0 ? 
   `⚠️ **Red Flags Detected:** ${symptomAnalysis.data.redFlags.join(', ')}` : ''}`;
