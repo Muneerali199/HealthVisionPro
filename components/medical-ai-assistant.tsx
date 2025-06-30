@@ -22,7 +22,9 @@ import {
   Send,
   Mic,
   Image,
-  BookOpen
+  BookOpen,
+  Shield,
+  Apple
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { MedicalAI } from '@/lib/medical-database';
